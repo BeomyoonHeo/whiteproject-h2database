@@ -1,5 +1,7 @@
 package site.metacoding.white.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,24 @@ public class BoardService {
 
     public Board findById(Long id) {
         return boardRepository.findById(id);
-    };
+    }
+
+    @Transactional
+    public void update(Long id, Board board) {
+        Board boardPS = boardRepository.findById(id);
+        boardPS.setTitle(board.getTitle());
+        boardPS.setContent(board.getContent());
+        boardPS.setAuthor(board.getAuthor());
+
+    } // 트랜잭션 종료시 -> 더티체킹을 함
+
+    @Transactional
+    public void deleteById(Long id) {
+        boardRepository.deleteById(id);
+    }
+
+    public List<Board> findAll() {
+        return boardRepository.findAll();
+    }
 
 }

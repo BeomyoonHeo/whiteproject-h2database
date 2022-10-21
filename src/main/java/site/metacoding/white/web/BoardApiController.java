@@ -15,7 +15,7 @@ import site.metacoding.white.web.dto.request.BoardDto;
 
 @RestController
 @RequiredArgsConstructor
-public class BoardController {
+public class BoardApiController {
 
     private final BoardService boardService;
 

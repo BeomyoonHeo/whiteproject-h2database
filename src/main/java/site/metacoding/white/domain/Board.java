@@ -13,10 +13,11 @@ import lombok.Setter;
 @Entity
 public class Board {
     @Id// - primary key 적용
-    @GeneratedValue(strategy=GenerationType.IDENTITY)// - auto increment 적용
+    @GeneratedValue(strategy=GenerationType.IDENTITY)// - auto increment 적용 / 해당 DB의 Identity전략을 그대로 따라간다.
     private Long id;
     private String title;
     @Column(length=1000)
     private String content;
+    private String author;
 
 }

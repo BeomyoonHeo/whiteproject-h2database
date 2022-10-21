@@ -46,7 +46,7 @@ public class BoardApiController {
         boardService.deleteById(id);
         return "ok";
     }
-    @GetMapping("/board/all")
+    @GetMapping("/board")
     public List<Board> findAll() {
         return boardService.findAll();
     }

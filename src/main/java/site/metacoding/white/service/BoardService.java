@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 
+// 트랜잭션 관리
+// DTO 변환해서 컨트롤러에게 돌려줘야함
+
 @RequiredArgsConstructor
 @Service
 public class BoardService {

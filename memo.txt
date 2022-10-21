@@ -1,0 +1,11 @@
+서버 킬 때 f5 (with out debuger - ctrl + f5)
+디버그
+ - 로그 작성(매우 중요) - sysout 많이 찍어보기
+ - 
+
+yml파일은 json 경량화 파일이다. - application.properties보다 경량화 되어 있음(경량화 되어있고, 가독성도 좋다.)
+spring은 gradle에 있는 version을 자동으로 맞춰준다. (version 입력 생략 시)
+
+하이버네이트 탄생배경
+ - 객체그래프 탐색 
+ c(client) - c(controller) - s(service) - r(repository) - pc(persistence context)<id를 가지고 있다면 flush 시 update실행 없다면 insert 실행> - db(database)

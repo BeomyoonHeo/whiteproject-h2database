@@ -32,7 +32,6 @@ public class BoardService {
         Board boardPS = boardRepository.findById(id);
         boardPS.setTitle(board.getTitle());
         boardPS.setContent(board.getContent());
-        boardPS.setAuthor(board.getAuthor());
 
     } // 트랜잭션 종료시 -> 더티체킹을 함
 

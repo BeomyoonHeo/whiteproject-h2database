@@ -8,8 +8,11 @@ import javax.persistence.Id;
 
 
 import lombok.Getter;
+import lombok.Setter;
+
 
 @Getter
+@Setter
 @Entity//Value Object
 public class User {
     @Id

@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @Entity
 public class Board {
     @Id// - primary key 적용
@@ -22,7 +22,7 @@ public class Board {
     @Column(length=1000)
     private String content;
 
-    @ManyToOne(fetch = FetchType.EAGER) // foreign key 생성
+    @ManyToOne(fetch = FetchType.LAZY) // foreign key 생성
     private User user;
 
 }

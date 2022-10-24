@@ -9,3 +9,11 @@ spring은 gradle에 있는 version을 자동으로 맞춰준다. (version 입력
 하이버네이트 탄생배경
  - 객체그래프 탐색 
  c(client) - c(controller) - s(service) - r(repository) - pc(persistence context)<id를 가지고 있다면 flush 시 update실행 없다면 insert 실행> - db(database)
+
+Lazy Loading - 지연로딩
+
+VO - value Object : Entity, 변경 불가능한 데이터/Dto 변경 가능한 데이터
+
+Transactional - isolation level
+
+hibernate - ORM, middle ware

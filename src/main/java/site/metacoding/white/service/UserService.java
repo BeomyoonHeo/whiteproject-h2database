@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.User;
 import site.metacoding.white.domain.UserRepository;
+import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.dto.UserRequestDto.JoinReqDto;
 import site.metacoding.white.dto.UserRequestDto.LoginReqDto;
 import site.metacoding.white.dto.UserResponseDto.JoinRespDto;
@@ -27,10 +28,11 @@ public class UserService {
     }// 트랜잭션 종료
 
     @Transactional(readOnly = true)
-    public User login(LoginReqDto loginReqDto) {
+    public SessionUser login(LoginReqDto loginReqDto) {
         User userPS = userRepository.findByUsername(loginReqDto.getUsername());
+
         if (userPS.getPassword().equals(loginReqDto.getPassword())) {
-            return userPS;    
+            return new SessionUser(userPS);
         } else {
             throw new RuntimeException("아이디 혹은 패스워드가 잘못 입력되었습니다.");
         }

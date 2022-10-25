@@ -3,15 +3,13 @@ package site.metacoding.white.web;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.white.domain.User;
 import site.metacoding.white.dto.ResponseDto;
+import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.dto.UserRequestDto.JoinReqDto;
 import site.metacoding.white.dto.UserRequestDto.LoginReqDto;
 import site.metacoding.white.dto.UserResponseDto.JoinRespDto;
@@ -25,18 +23,16 @@ public class UserApiController {
     private final HttpSession session;
 
     @PostMapping("/join")
-    public ResponseEntity<?> userJoin(@RequestBody JoinReqDto joinReqDto) {
+    public ResponseDto<?> userJoin(@RequestBody JoinReqDto joinReqDto) {
         JoinRespDto joinRespDto = userService.save(joinReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "ok", joinRespDto), HttpStatus.CREATED);
+        return new ResponseDto<>(1, "ok", joinRespDto);
     }
 
     @PostMapping("/login")
-    public String userLogin(@RequestBody LoginReqDto loginReqDto) {
+    public ResponseDto<?> userLogin(@RequestBody LoginReqDto loginReqDto) {
         
-        User principal = userService.login(loginReqDto);
-
+        SessionUser principal = userService.login(loginReqDto);
         session.setAttribute("principal", principal);
-
-        return "ok";
+        return new ResponseDto<>(1, "ok", principal);
     }
 }

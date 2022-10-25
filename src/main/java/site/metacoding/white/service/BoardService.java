@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardCreateDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardDetailDto;
 
 // 트랜잭션 관리
 // DTO 변환해서 컨트롤러에게 돌려줘야함
@@ -20,26 +22,23 @@ public class BoardService {
     private final BoardRepository boardRepository;
     
     @Transactional // 무조건 명시해줘야 한다.
-    public void save(BoardSaveReqDto boardSaveReqDto) {
-        Board board = new Board();
-        board.setTitle(boardSaveReqDto.getTitle());
-        board.setContent(boardSaveReqDto.getContent());
-        board.setUser(boardSaveReqDto.getServiceDto().getUser());
-        boardRepository.save(board);
+    public BoardCreateDto save(BoardSaveReqDto boardSaveReqDto) {
+        Board boardPS = boardRepository.save(boardSaveReqDto.SavetoEntity(boardSaveReqDto));
+        return new BoardCreateDto(boardPS);
     }
 
     @Transactional(readOnly = true)
-    public Board findById(Long id) {
+    public BoardDetailDto findById(Long id) {
         Board boardPS = boardRepository.findById(id);
-        //boardPS.getUser().getUsername();
-        return boardPS;
+        BoardDetailDto boardDetailDto = new BoardDetailDto(boardPS);
+        return boardDetailDto;
     }
 
     @Transactional
     public void update(Long id, Board board) {
         Board boardPS = boardRepository.findById(id);
-        boardPS.setTitle(board.getTitle());
-        boardPS.setContent(board.getContent());
+ //       boardPS.setTitle(board.getTitle());
+//        boardPS.setContent(board.getContent());
 
     } // 트랜잭션 종료시 -> 더티체킹을 함
 

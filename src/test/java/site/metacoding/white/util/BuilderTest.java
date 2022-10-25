@@ -36,6 +36,9 @@ public class BuilderTest {
     @Test
     public void 빌더_테스트() {
         System.out.println("can i print ? looooooooooooooool");
-        MyUser.builder().id(1L).password("1234").username("user");
+        MyUser user = MyUser.builder().id(1L).password("1234").username("user");
+        System.out.println(user.getId());
+        System.out.println(user.getPassword());
+        System.out.println(user.getUsername());
     }
 }

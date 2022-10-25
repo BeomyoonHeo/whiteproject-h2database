@@ -9,21 +9,20 @@ public class UserRequestDto {
 
     @Getter
     @Setter
-    public static class userJoinDto {
+    public static class JoinReqDto { // 인증관련 로직들은 전부다 앞에 엔티티 안붙임. POST /user -> /join
         private String username;
         private String password;
-        private SaveDto saveDto;
 
-
-        public void newInstance() {
-            this.saveDto = new SaveDto();
+        public User toEntity() {
+            return User.builder().username(this.username).password(this.password).build();
         }
 
-        @Getter
-        @Setter
-        public class SaveDto {
-            private User user;
-        }
+    }
+    @Setter
+    @Getter
+    public static class LoginReqDto {
+        private String username;
+        private String password;
     }
     
 }

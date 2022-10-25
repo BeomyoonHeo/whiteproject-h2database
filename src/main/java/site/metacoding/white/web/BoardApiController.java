@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.User;
-import site.metacoding.white.dto.BoardRequestDto.BoardSaveDto;
+import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
 import site.metacoding.white.service.BoardService;
 
 @RequiredArgsConstructor
@@ -39,14 +39,6 @@ public class BoardApiController {
         return "OK";
     }
 
-    // @PostMapping("/board")
-    // public String save(@RequestBody Board board) {
-    //     board.setUser((User)session.getAttribute("principal"));
-    //     boardService.save(board);
-
-    //     return "ok";
-    // }
-
     @PutMapping("/board/{id}")
     public String update(@PathVariable Long id, @RequestBody Board board) {
         boardService.update(id, board);
@@ -63,13 +55,13 @@ public class BoardApiController {
         return boardService.findAll();
     }
 
-    @PostMapping("/v2/board")
-    public String saveV2(@RequestBody BoardSaveDto boardSaveDto) {
+    @PostMapping("/board")
+    public String saveV2(@RequestBody BoardSaveReqDto boardSaveReqDto) {
         User principal = (User) session.getAttribute("principal");
-        boardSaveDto.newInstance();
-        boardSaveDto.getServiceDto().setUser(principal);
+        boardSaveReqDto.newInstance();
+        boardSaveReqDto.getServiceDto().setUser(principal);
         // insert into board(title, content, user_id), value(?, ?, ?)
-        boardService.save(boardSaveDto);
+        boardService.save(boardSaveReqDto); // 서비스에는 단 하나의 객체만 전달한다.
 
         return "ok";
     }

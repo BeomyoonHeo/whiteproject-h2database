@@ -9,7 +9,7 @@ public class BoardRequestDto {
 
     @Getter
     @Setter
-    public static class BoardSaveDto {
+    public static class BoardSaveReqDto {
         private String title;
         private String content;
 

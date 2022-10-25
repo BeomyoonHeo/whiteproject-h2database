@@ -2,7 +2,7 @@ package site.metacoding.white.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import site.metacoding.white.domain.User;
+import site.metacoding.white.domain.Board;
 
 
 public class BoardRequestDto {
@@ -12,19 +12,10 @@ public class BoardRequestDto {
     public static class BoardSaveReqDto {
         private String title;
         private String content;
+        private SessionUser sessionUser;
 
-        private ServiceDto serviceDto;
-
-        // 클라이언트한테 받는게 아님
-        public void newInstance() {
-            this.serviceDto = new ServiceDto();
-        }
-
-        @Getter
-        @Setter
-        public class ServiceDto {
-            private User user;
-
+        public Board toEntity() {
+            return Board.builder().title(title).content(content).user(sessionUser.toEntity()).build();
         }
     }
     // DTO는 여기다가 추가로

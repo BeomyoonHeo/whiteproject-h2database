@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
 
 // 트랜잭션 관리
 // DTO 변환해서 컨트롤러에게 돌려줘야함
@@ -20,12 +21,13 @@ public class BoardService {
     private final BoardRepository boardRepository;
     
     @Transactional // 무조건 명시해줘야 한다.
-    public void save(BoardSaveReqDto boardSaveReqDto) {
-        Board board = new Board();
-        board.setTitle(boardSaveReqDto.getTitle());
-        board.setContent(boardSaveReqDto.getContent());
-        board.setUser(boardSaveReqDto.getServiceDto().getUser());
-        boardRepository.save(board);
+    public BoardSaveRespDto save(BoardSaveReqDto boardSaveReqDto) {
+
+        Board boardPS = boardRepository.save(boardSaveReqDto.toEntity());
+    
+        BoardSaveRespDto boardSaveRespDto = new BoardSaveRespDto(boardPS);
+
+        return boardSaveRespDto;
     }
 
     @Transactional(readOnly = true)
@@ -38,8 +40,7 @@ public class BoardService {
     @Transactional
     public void update(Long id, Board board) {
         Board boardPS = boardRepository.findById(id);
-        boardPS.setTitle(board.getTitle());
-        boardPS.setContent(board.getContent());
+        boardPS.update(board.getTitle(), board.getContent());
 
     } // 트랜잭션 종료시 -> 더티체킹을 함
 

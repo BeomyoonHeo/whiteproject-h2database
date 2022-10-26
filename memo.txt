@@ -19,3 +19,5 @@ Transactional - isolation level
 hibernate - ORM, middle ware
 
 setter - 변경되는 값을 적용하기 위해서 사용(항상 변경되는 값)
+
+화면 설계시 사용자의 시나리오대로 작성

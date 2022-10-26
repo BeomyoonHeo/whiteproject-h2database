@@ -1,8 +1,5 @@
 package site.metacoding.white.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.white.domain.Board;
@@ -54,16 +51,18 @@ public class BoardResponseDto {
             this.author = board.getUser().getUsername();
         }
     }
-    
-    @Getter
-    public static class FindAllDto {
-        private List<BoardDetailRespDto> boards;
 
-        public FindAllDto(List<Board> boardsPS) {
-            boards = new ArrayList<>();
-            for (Board boardPS : boardsPS) {
-                boards.add(new BoardDetailRespDto(boardPS));
-            }
+    @Getter
+    public static class BoardAllRespDto {
+        private String title;
+        private String content;
+        private UserRespDto user;
+
+
+        public BoardAllRespDto(Board board) {
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.user = new UserRespDto(board.getUser());
         }
     }
     

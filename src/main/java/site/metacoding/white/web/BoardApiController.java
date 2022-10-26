@@ -16,7 +16,6 @@ import site.metacoding.white.domain.Board;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardDetailRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
-import site.metacoding.white.dto.BoardResponseDto.FindAllDto;
 import site.metacoding.white.dto.ResponseDto;
 import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.service.BoardService;
@@ -51,10 +50,7 @@ public class BoardApiController {
 
     @GetMapping("/board")
     public ResponseDto<?> findAll() {
-
-        FindAllDto findAllDto = boardService.findAll();
-
-        return new ResponseDto<>(1, "ok", findAllDto);
+        return new ResponseDto<>(1, "ok",  boardService.findAll());
     }
 
     @PostMapping("/board")

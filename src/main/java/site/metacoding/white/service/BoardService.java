@@ -1,5 +1,7 @@
 package site.metacoding.white.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -9,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardAllRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardDetailRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
-import site.metacoding.white.dto.BoardResponseDto.FindAllDto;
 
 // 트랜잭션 관리
 // DTO 변환해서 컨트롤러에게 돌려줘야함
@@ -48,7 +50,7 @@ public class BoardService {
     public void update(Long id, Board board) {
 
         Optional<Board> boardOP = boardRepository.findById(id);
-        
+
         if (boardOP.isEmpty()) {
             throw new RuntimeException("해당" + id + "로 수정을 할 수 없습니다.");
         }
@@ -62,8 +64,18 @@ public class BoardService {
     }
 
     @Transactional
-    public FindAllDto findAll() {
-        return new FindAllDto(boardRepository.findAll());
+    public List<BoardAllRespDto> findAll() {
+
+        List<Board> boardPSs = boardRepository.findAll();
+        List<BoardAllRespDto> boardAllRespDtos = new ArrayList<>();
+        // 1. List의 크기만큼 for문 돌리기
+        for (Board board : boardPSs) {
+            boardAllRespDtos.add(new BoardAllRespDto(board));
+        }
+        // 2. Board -> DTO로 옮겨야 함
+
+        // 3. DTO를 LIST에 담기
+        return boardAllRespDtos;
     }
 
 }

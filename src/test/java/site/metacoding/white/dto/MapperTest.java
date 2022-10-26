@@ -13,6 +13,7 @@ class Product {
     private String mcp; //제조사
 }
 
+@Getter
 class ProductDto {
     private String name;
     private Integer qty;

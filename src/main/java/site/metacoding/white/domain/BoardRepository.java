@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.white.service.BoardService;
 
 @RequiredArgsConstructor
 @Repository
@@ -21,15 +22,21 @@ public class BoardRepository {
         return board;
     }
     
-    public Optional<Board> findById(Long id) {
+    public Optional<Board> findById(Long id){
         // Board boardPS = em.createQuery("select b from Board b where b.id = :id", Board.class)
         //         .setParameter("id", id)
         //         .getSingleResult(); //entity 조회 쿼리 - JPQL
-        Optional<Board> boardOP = Optional.ofNullable(em
+        try {
+            Optional<Board> boardOP = Optional.of(em
             .createQuery("select b from Board b where b.id = :id", Board.class)
             .setParameter("id", id)
             .getSingleResult());
-        return boardOP;
+            return boardOP;
+                } catch (Exception e) {
+                    return Optional.empty();
+        }
+
+        
     }
     
     public void deleteById(Long id) {

@@ -55,11 +55,22 @@ public class BoardResponseDto {
     @Getter
     public static class BoardAllRespDto {
         private String title;
+        private UserRespDto user;
+
+        public BoardAllRespDto(Board board) {
+            this.title = board.getTitle();
+            this.user = new UserRespDto(board.getUser());
+        }
+    }
+    
+    @Getter
+    public static class BoardUpdateRespDto {
+        private String title;
         private String content;
         private UserRespDto user;
 
 
-        public BoardAllRespDto(Board board) {
+        public BoardUpdateRespDto(Board board) {
             this.title = board.getTitle();
             this.content = board.getContent();
             this.user = new UserRespDto(board.getUser());

@@ -8,16 +8,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardRequestDto.BoardUpdateReqDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardAllRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardDetailRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardUpdateRespDto;
 
 // 트랜잭션 관리
 // DTO 변환해서 컨트롤러에게 돌려줘야함
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -47,19 +51,28 @@ public class BoardService {
     }
 
     @Transactional
-    public void update(Long id, Board board) {
+    public BoardUpdateRespDto update(BoardUpdateReqDto boardUpdateReqDto) {
+
+        Long id = boardUpdateReqDto.getId();
 
         Optional<Board> boardOP = boardRepository.findById(id);
 
         if (boardOP.isEmpty()) {
+            
             throw new RuntimeException("해당" + id + "로 수정을 할 수 없습니다.");
         }
-        boardOP.get().update(board.getTitle(), board.getContent());
+        boardOP.get().update(boardUpdateReqDto.getTitle(), boardUpdateReqDto.getContent());
+        Board boardPS = boardOP.get();
+        return new BoardUpdateRespDto(boardPS);
 
     } // 트랜잭션 종료시 -> 더티체킹을 함
 
     @Transactional
     public void deleteById(Long id) {
+        Optional<Board> boardOP = boardRepository.findById(id);
+        if (boardOP.isEmpty()) {
+            throw new RuntimeException("해당 번호" + id + "번 으로 삭제를 할 수 없습니다.");
+        }
         boardRepository.deleteById(id);
     }
 

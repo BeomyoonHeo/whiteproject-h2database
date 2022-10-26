@@ -18,5 +18,18 @@ public class BoardRequestDto {
             return Board.builder().title(title).content(content).user(sessionUser.toEntity()).build();
         }
     }
+
+    @Getter
+    @Setter
+    public static class BoardUpdateReqDto {
+        private Long id;
+        private String title;
+        private String content;
+        private SessionUser sessionUser;
+
+        public Board toEntity() {
+            return Board.builder().id(id).title(title).content(content).user(sessionUser.toEntity()).build();
+        }
+    }
     // DTO는 여기다가 추가로
 }

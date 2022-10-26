@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardRequestDto.BoardUpdateReqDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardDetailRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
 import site.metacoding.white.dto.ResponseDto;
@@ -37,15 +38,15 @@ public class BoardApiController {
     }
 
     @PutMapping("/board/{id}")
-    public String update(@PathVariable Long id, @RequestBody Board board) {
-        boardService.update(id, board);
-        return "ok";
+    public ResponseDto<?> update(@PathVariable Long id, @RequestBody BoardUpdateReqDto boardUpdateReqDto) {
+        boardUpdateReqDto.setId(id);
+        return new ResponseDto<>(1, "code", boardService.update(boardUpdateReqDto));
     }
 
     @DeleteMapping("/board/{id}")
-    public String delete(@PathVariable Long id) {
+    public ResponseDto<?> delete(@PathVariable Long id) {
         boardService.deleteById(id);
-        return "ok";
+        return new ResponseDto<>(1, "ok", null);
     }
 
     @GetMapping("/board")

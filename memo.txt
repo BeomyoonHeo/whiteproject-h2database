@@ -17,3 +17,5 @@ VO - value Object : Entity, 변경 불가능한 데이터/Dto 변경 가능한 �
 Transactional - isolation level
 
 hibernate - ORM, middle ware
+
+setter - 변경되는 값을 적용하기 위해서 사용(항상 변경되는 값)

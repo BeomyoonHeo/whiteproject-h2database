@@ -1,8 +1,6 @@
 package site.metacoding.white.web;
 
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardDetailRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
+import site.metacoding.white.dto.BoardResponseDto.FindAllDto;
 import site.metacoding.white.dto.ResponseDto;
 import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.service.BoardService;
@@ -30,15 +30,11 @@ public class BoardApiController {
     //import alt + shift + o
 
     @GetMapping("/board/{id}")
-    public String findById(@PathVariable Long id) {
+    public ResponseDto<?> findById(@PathVariable Long id) {
 
-        Board boardPS = boardService.findById(id);
-        System.out.println(boardPS.getTitle());
-        System.out.println(boardPS.getContent());
-        System.out.println(boardPS.getUser().getUsername());
-        System.out.println(boardPS.getUser().getPassword());
-        System.out.println(boardPS.getUser().getId());
-        return "OK";
+        BoardDetailRespDto boardDetailRespDto = boardService.findById(id);
+
+        return new ResponseDto<>(1, "ok", boardDetailRespDto);
     }
 
     @PutMapping("/board/{id}")
@@ -52,9 +48,13 @@ public class BoardApiController {
         boardService.deleteById(id);
         return "ok";
     }
+
     @GetMapping("/board")
-    public List<Board> findAll() {
-        return boardService.findAll();
+    public ResponseDto<?> findAll() {
+
+        FindAllDto findAllDto = boardService.findAll();
+
+        return new ResponseDto<>(1, "ok", findAllDto);
     }
 
     @PostMapping("/board")

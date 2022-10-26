@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.User;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
-import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto.UserRespDto;
 
 public class BoardSaveRespDtoTest {
 
@@ -16,8 +15,8 @@ public class BoardSaveRespDtoTest {
         BoardSaveRespDto boardResponseDto = new BoardSaveRespDto(boardTest);
 
 
-        UserRespDto userRespDto = new UserRespDto(user);
-        boardResponseDto.setUser(userRespDto);
-    }
+    //     UserRespDto userRespDto = new UserRespDto(user);
+    //     boardResponseDto.setUser(userRespDto);
+ }
     
 }

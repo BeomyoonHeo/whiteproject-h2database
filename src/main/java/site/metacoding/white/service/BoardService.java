@@ -1,6 +1,6 @@
 package site.metacoding.white.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardResponseDto.BoardDetailRespDto;
 import site.metacoding.white.dto.BoardResponseDto.BoardSaveRespDto;
+import site.metacoding.white.dto.BoardResponseDto.FindAllDto;
 
 // 트랜잭션 관리
 // DTO 변환해서 컨트롤러에게 돌려줘야함
@@ -31,16 +33,26 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Board findById(Long id) {
-        Board boardPS = boardRepository.findById(id);
-        //boardPS.getUser().getUsername();
-        return boardPS;
+    public BoardDetailRespDto findById(Long id) {
+
+        Optional<Board> boardOP = boardRepository.findById(id);
+
+        if (boardOP.isPresent()) {
+            return new BoardDetailRespDto(boardOP.get());
+        } else {
+            throw new RuntimeException("해당" + id + "로 상세보기를 할 수 없습니다.");
+        }
     }
 
     @Transactional
     public void update(Long id, Board board) {
-        Board boardPS = boardRepository.findById(id);
-        boardPS.update(board.getTitle(), board.getContent());
+
+        Optional<Board> boardOP = boardRepository.findById(id);
+        
+        if (boardOP.isEmpty()) {
+            throw new RuntimeException("해당" + id + "로 수정을 할 수 없습니다.");
+        }
+        boardOP.get().update(board.getTitle(), board.getContent());
 
     } // 트랜잭션 종료시 -> 더티체킹을 함
 
@@ -49,8 +61,9 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
-    public List<Board> findAll() {
-        return boardRepository.findAll();
+    @Transactional
+    public FindAllDto findAll() {
+        return new FindAllDto(boardRepository.findAll());
     }
 
 }

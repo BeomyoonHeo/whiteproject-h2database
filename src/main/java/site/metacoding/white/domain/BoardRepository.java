@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.white.service.BoardService;
 
 @RequiredArgsConstructor
 @Repository

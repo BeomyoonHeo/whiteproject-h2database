@@ -39,12 +39,20 @@ public class BoardApiController {
 
     @PutMapping("/board/{id}")
     public ResponseDto<?> update(@PathVariable Long id, @RequestBody BoardUpdateReqDto boardUpdateReqDto) {
+        SessionUser principal = (SessionUser) session.getAttribute("principal");
+        if (principal == null) {
+            throw new RuntimeException("로그인을 진행해주세요");
+        }
         boardUpdateReqDto.setId(id);
         return new ResponseDto<>(1, "code", boardService.update(boardUpdateReqDto));
     }
 
     @DeleteMapping("/board/{id}")
     public ResponseDto<?> delete(@PathVariable Long id) {
+        SessionUser principal = (SessionUser) session.getAttribute("principal");
+        if (principal == null) {
+            throw new RuntimeException("로그인을 진행해주세요");
+        }
         boardService.deleteById(id);
         return new ResponseDto<>(1, "ok", null);
     }
@@ -57,6 +65,9 @@ public class BoardApiController {
     @PostMapping("/board")
     public ResponseDto<?> save(@RequestBody BoardSaveReqDto boardSaveReqDto) {
         SessionUser principal = (SessionUser) session.getAttribute("principal");
+        if (principal == null) {
+            throw new RuntimeException("로그인을 진행해주세요");
+        }
         boardSaveReqDto.setSessionUser(principal);
         // insert into board(title, content, user_id), value(?, ?, ?)
         BoardSaveRespDto boardSaveRespDto = boardService.save(boardSaveReqDto); // 서비스에는 단 하나의 객체만 전달한다.

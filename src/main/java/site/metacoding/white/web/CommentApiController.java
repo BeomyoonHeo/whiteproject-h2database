@@ -22,11 +22,14 @@ public class CommentApiController {
     private final CommentService commentService;
     private final HttpSession session;
     
-
     @PostMapping("/comment")
     public ResponseDto<?> save(@RequestBody CommentSaveReqDto commentSaveReqDto) {
 
         SessionUser sessionUser = (SessionUser) session.getAttribute("principal");
+
+        if (sessionUser == null) {
+            throw new RuntimeException("로그인을 진행해주세요");
+        }
 
         commentSaveReqDto.setSessionUser(sessionUser);
 

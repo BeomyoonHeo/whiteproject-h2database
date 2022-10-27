@@ -28,6 +28,7 @@ public class BoardApiController {
     private final HttpSession session;
     //import alt + shift + o
 
+    // 게시글 상세보기 (Board + User + List<Comment>)
     @GetMapping("/board/{id}")
     public ResponseDto<?> findById(@PathVariable Long id) {
 

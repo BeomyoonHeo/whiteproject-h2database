@@ -3,6 +3,8 @@ package site.metacoding.white.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,9 +82,7 @@ public class BoardService {
         List<Board> boardPSs = boardRepository.findAll();
         List<BoardAllRespDto> boardAllRespDtos = new ArrayList<>();
         // 1. List의 크기만큼 for문 돌리기
-        for (Board board : boardPSs) {
-            boardAllRespDtos.add(new BoardAllRespDto(board));
-        }
+        boardAllRespDtos = boardPSs.stream().map((board) -> new BoardAllRespDto(board)).collect(Collectors.toList());
         // 2. Board -> DTO로 옮겨야 함
 
         // 3. DTO를 LIST에 담기

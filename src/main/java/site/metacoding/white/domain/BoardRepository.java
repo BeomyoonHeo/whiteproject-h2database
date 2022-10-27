@@ -27,7 +27,10 @@ public class BoardRepository {
         //         .getSingleResult(); //entity 조회 쿼리 - JPQL/ 객체그래프 생성
         try {
             Optional<Board> boardOP = Optional.of(em
-            .createQuery("select b from Board b join fetch b.user u join fetch b.comments c join fetch c.user where b.id = :id", Board.class)
+            .createQuery("select b from Board b "+
+                            "join fetch b.user u " +
+                            "join fetch b.comments c " +
+            "join fetch c.user where b.id = :id", Board.class)
             .setParameter("id", id)
             .getSingleResult());
             return boardOP;

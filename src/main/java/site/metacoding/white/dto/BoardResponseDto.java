@@ -48,9 +48,9 @@ public class BoardResponseDto {
                 .stream()
                 .map((comment) -> new CommentRespDto(comment))
                 .collect(Collectors.toList()); // foreach는 값을 return 해주지 않지만 map은 값을 return 해준다. -> 해당 객체로
-            // for (Comment comment : board.getComments()) {
-            //     this.comments.add(new CommentRespDto(comment));
-            // }
+            for (Comment comment : board.getComments()) {
+                this.comments.add(new CommentRespDto(comment));
+            }
         }
 
         @Getter

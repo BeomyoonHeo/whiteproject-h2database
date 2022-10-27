@@ -2,6 +2,8 @@ package site.metacoding.white.web;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +33,12 @@ public class CommentApiController {
         CommentSaveRespDto commentSaveRespDto = commentService.save(commentSaveReqDto);
 
         return new ResponseDto<>(1, "ok", commentSaveRespDto);
+    }
+
+    @DeleteMapping("/comment/{id}")
+    public ResponseDto<?> deleteById(@PathVariable Long id) {
+        commentService.deleteById(id);
+        return new ResponseDto<>(1, "ok", null);
     }
 
 

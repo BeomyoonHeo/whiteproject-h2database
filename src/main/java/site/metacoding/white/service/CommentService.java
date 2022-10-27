@@ -26,7 +26,7 @@ public class CommentService {
         // 1. Board가 있는지 확인
         Optional<Board> boardOP = boardRepository.findById(commentSaveReqDto.getBoardId());
         if (boardOP.isPresent()) {
-
+            // 2. Comment 객체 만들기
             Comment comment = commentSaveReqDto.toEntity(boardOP.get());
 
             Comment commentPS = commentRepository.save(comment);
@@ -34,14 +34,25 @@ public class CommentService {
             CommentSaveRespDto commentSaveRespDto = new CommentSaveRespDto(commentPS);
 
             return commentSaveRespDto;
-            
+
         } else {
             throw new RuntimeException("게시글이 없어 댓글을 쓸 수 없습니다.");
         }
-        // 2. Comment 객체 만들기
-
-
         
+
+    }
+
+    
+    @Transactional
+    public void deleteById(Long id) {
+        Optional<Comment> commentOP = commentRepository.findById(id);
+        if (commentOP.isPresent()) {
+            commentRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("해당" + id + "로 삭제할 수 없습니다.");
+        }
+        
+
     }
 
 }

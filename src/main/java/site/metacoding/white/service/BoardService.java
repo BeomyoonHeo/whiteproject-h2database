@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import site.metacoding.white.domain.Board;
 import site.metacoding.white.domain.BoardRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
@@ -23,6 +25,8 @@ import site.metacoding.white.dto.BoardResponseDto.BoardUpdateRespDto;
 
 @RequiredArgsConstructor
 @Service
+@ToString
+@Slf4j
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -41,7 +45,6 @@ public class BoardService {
     public BoardDetailRespDto findById(Long id) {
 
         Optional<Board> boardOP = boardRepository.findById(id);
-
         if (boardOP.isPresent()) {
             return new BoardDetailRespDto(boardOP.get());
         } else {

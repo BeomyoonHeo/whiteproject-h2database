@@ -1,5 +1,7 @@
 package site.metacoding.white.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.domain.User;
 import site.metacoding.white.domain.UserRepository;
 import site.metacoding.white.dto.SessionUser;
-import site.metacoding.white.dto.UserRequestDto.JoinReqDto;
-import site.metacoding.white.dto.UserRequestDto.LoginReqDto;
-import site.metacoding.white.dto.UserResponseDto.JoinRespDto;
+import site.metacoding.white.dto.UserRequestDto.UserJoinReqDto;
+import site.metacoding.white.dto.UserRequestDto.UserLoginReqDto;
+import site.metacoding.white.dto.UserRequestDto.UserUpdateReqDto;
+import site.metacoding.white.dto.UserResponseDto.UserJoinRespDto;
+import site.metacoding.white.dto.UserResponseDto.UserUpdateRespDto;
+import site.metacoding.white.dto.UserResponseDto.UserUpdateRespDto.UserDetailRespDto;
 import site.metacoding.white.util.SHA256;
 
 // 트랜잭션 관리
@@ -25,7 +30,7 @@ public class UserService {
     // 서비스메서드는 여러가지 책임을 가질 수 있다.
     // 응답의 DTO는 서비스에서 만든다.
     @Transactional // 트랜잭션을 붙이지 않으면 영속화 되어 있는 객체가 flush가 안됨.
-    public JoinRespDto save(JoinReqDto joinReqDto) {
+    public UserJoinRespDto save(UserJoinReqDto joinReqDto) {
 
         //비밀번호 해시
         String encPassword = sha256.encrypt(joinReqDto.getPassword());
@@ -35,11 +40,11 @@ public class UserService {
         User userPS = userRepository.save(joinReqDto.toEntity());
 
         //DTO 리턴
-        return new JoinRespDto(userPS);
+        return new UserJoinRespDto(userPS);
     }// 트랜잭션 종료
 
     @Transactional(readOnly = true)
-    public SessionUser login(LoginReqDto loginReqDto) {
+    public SessionUser login(UserLoginReqDto loginReqDto) {
         String encPassword = sha256.encrypt(loginReqDto.getPassword());
         User userPS = userRepository.findByUsername(loginReqDto.getUsername());
         if (userPS.getPassword().equals(encPassword)) {
@@ -47,6 +52,29 @@ public class UserService {
         } else {
             throw new RuntimeException("아이디 혹은 패스워드가 잘못 입력되었습니다.");
         }
-        
+
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetailRespDto userDetail(Long id) {
+        Optional<User> userOP = userRepository.findById(id);
+        if (userOP.isEmpty()) {
+            throw new RuntimeException("유저정보가 존재하지 않습니다.");
+        }
+        return new UserDetailRespDto(userOP.get());
+    }
+    
+    @Transactional
+    public UserUpdateRespDto update(UserUpdateReqDto userUpdateReqDto) {
+        System.out.println(userUpdateReqDto.getSessionUser().getUsername());
+        Optional<User> userOP = userRepository.findById(userUpdateReqDto.getSessionUser().getId());
+        if (userOP.isEmpty()) {
+            throw new RuntimeException("로그인상태를 확인해주세요");
+        }
+        userUpdateReqDto.setPassword(sha256.encrypt(userUpdateReqDto.getPassword()));
+        User userPS = userUpdateReqDto.toEntity();
+
+        return new UserUpdateRespDto(userPS);
+
     }
 }

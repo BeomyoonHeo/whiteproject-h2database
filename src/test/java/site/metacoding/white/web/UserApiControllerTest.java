@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-import site.metacoding.white.dto.UserRequestDto.JoinReqDto;
-import site.metacoding.white.dto.UserRequestDto.LoginReqDto;
+import site.metacoding.white.dto.UserRequestDto.UserJoinReqDto;
+import site.metacoding.white.dto.UserRequestDto.UserLoginReqDto;
 import site.metacoding.white.service.UserService;
 
 @ActiveProfiles("test")
@@ -53,7 +53,7 @@ public class UserApiControllerTest {
     @Test
     public void join_test() throws JsonProcessingException {
         // given
-        JoinReqDto joinReqDto = new JoinReqDto();
+        UserJoinReqDto joinReqDto = new UserJoinReqDto();
         joinReqDto.setUsername("very");
         joinReqDto.setPassword("1234");
 
@@ -77,14 +77,14 @@ public class UserApiControllerTest {
     @Test
     public void login_test() throws JsonProcessingException {
         //data init
-        JoinReqDto joinReqDto = new JoinReqDto();
+        UserJoinReqDto joinReqDto = new UserJoinReqDto();
         joinReqDto.setUsername("very");
         joinReqDto.setPassword("1234");
         userService.save(joinReqDto); // join_test메서드에서 검증이 이미 끝났기 때문에 굳이 return값을 받아서 테스트를 진행 할 필요가 없다.
 
 
         // given
-        LoginReqDto loginReqDto = new LoginReqDto();
+        UserLoginReqDto loginReqDto = new UserLoginReqDto();
         loginReqDto.setUsername("very");
         loginReqDto.setPassword("1234");
         String body = om.writeValueAsString(loginReqDto);

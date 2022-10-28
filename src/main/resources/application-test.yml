@@ -1,25 +1,32 @@
 server:
-  port: 8000
+  port: 8001
   servlet:
     context-path: /
+    encoding:
+      charset: utf-8
 
 spring:
-  datasource: # datasource - mariadb와 연동하였다.
-    url: jdbc:h2:mem:test
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL # MariaDB 가 안됨
     driver-class-name: org.h2.Driver
     username: sa
-    password: 1234
+    password: 
+  h2:
+    console:
+      enabled: true
   jpa:
+    defer-datasource-initialization: true
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
-      '[hibernate.format_sql]': true #테이블이 생성될때 DEBUG Level을 자동으로 줄바꿈처리를 해줘서 보기 편하게 만들어 준다.
+      '[hibernate.format_sql]': true
+
   output:
     ansi:
       enabled: always
 
-logging: # 로깅레벨 - hibernate의 Debug 레벨이상만 로그에 출력 된다.
+logging:
   level:
-    '[org.hibernate.SQL]': DEBUG
-    #root: DEBUG
+    '[org.springframework.web]': DEBUG
+    '[org.hibernate]': DEBUG

@@ -1,0 +1,25 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /
+
+spring:
+  datasource: # datasource - mariadb와 연동하였다.
+    url: jdbc:mariadb://127.0.0.1:3306/greendb
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: green
+    password: 1234
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      '[hibernate.format_sql]': true #테이블이 생성될때 DEBUG Level을 자동으로 줄바꿈처리를 해줘서 보기 편하게 만들어 준다.
+  output:
+    ansi:
+      enabled: always
+
+logging: # 로깅레벨 - hibernate의 Debug 레벨이상만 로그에 출력 된다.
+  level:
+    '[org.hibernate.SQL]': DEBUG
+    #root: DEBUG

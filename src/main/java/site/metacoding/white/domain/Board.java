@@ -42,6 +42,10 @@ public class Board {
         this.user = user;
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
     public void update(String title, String content) {
         this.title = title;
         this.content = content;

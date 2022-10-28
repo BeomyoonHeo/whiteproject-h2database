@@ -1,124 +1,138 @@
 package site.metacoding.white.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import javax.transaction.Transactional;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import site.metacoding.white.domain.Board;
+import site.metacoding.white.domain.BoardRepository;
+import site.metacoding.white.domain.Comment;
+import site.metacoding.white.domain.CommentRepository;
 import site.metacoding.white.domain.User;
+import site.metacoding.white.domain.UserRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
 import site.metacoding.white.dto.SessionUser;
-import site.metacoding.white.dto.UserRequestDto.UserJoinReqDto;
-import site.metacoding.white.service.BoardService;
-import site.metacoding.white.service.UserService;
+import site.metacoding.white.util.SHA256;
 
 
-//@ToString// - 해당 객체의 필드값을 String형태로 보여준다.
-@ActiveProfiles("test")// application-test.yml로 동작
+@ActiveProfiles("test")
 @Sql("classpath:truncate.sql")
-@AutoConfigureMockMvc // MockMvc ioc 컨테이너에 등록
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK) // IOC 띄워주기
+@Transactional // 트랜잭션 안붙이면 영속성 컨텍스트에서 DB로 flush 안됨 (Hibernate 사용시)
+@AutoConfigureMockMvc // MockMvc Ioc 컨테이너에 등록
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK) // 가짜 환경으로 실행
 public class BoardApicontrollerTest {
+
+    private static final String APPLICATION_JSON = "application/json; charset=utf-8";
     
+    @Autowired
+    private MockMvc mvc;
+
     @Autowired
     private ObjectMapper om;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    private BoardService boardService;
+    private BoardRepository boardRepository;
 
     @Autowired
-    private MockMvc mvc;
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private SHA256 sha256;
 
     private MockHttpSession session;
-    private MockHttpServletRequest request;
 
     private static HttpHeaders headers;
 
-    @BeforeAll
-    public static void init() { // 이름 통일해주기
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    // @BeforeAll // 최초에 한번만 실행
+    // public static void init() { //이름 통일해주기 init
+    //     headers = new HttpHeaders();
+    //     headers.setContentType(MediaType.APPLICATION_JSON);
+    // }
+
+    @BeforeEach// test메서드 진입전에 트랜잭션 발동
+    public void sessionInit() {
+        session = new MockHttpSession();
+        User user = User.builder().id(1L).username("ssar").build();
+        session.setAttribute("principal", new SessionUser(user));
+    }
+
+    @BeforeEach
+    public void dataInit() {
+        String encPassword = sha256.encrypt("1234");
+        User user = User.builder().username("ssar").password(encPassword).build();
+        User userPS = userRepository.save(user);
+
+        Board board = Board.builder()
+                .title("스프링1강")
+                .content("트랜잭션관리")
+                .user(userPS)
+                .build();
+        Board boardPS = boardRepository.save(board);
+
+        Comment comment = Comment.builder()
+                .content("내용좋아요")
+                .board(boardPS)
+                .user(userPS)
+                .build();
+
+        commentRepository.save(comment);
     }
 
     @Test
     public void findById_test() throws Exception {
-        //data init
-        UserJoinReqDto joinReqDto = new UserJoinReqDto();
-        joinReqDto.setUsername("ssar");
-        joinReqDto.setPassword("1234");
-        userService.save(joinReqDto);
-
-        BoardSaveReqDto boardSaveReqDto = new BoardSaveReqDto();
-        boardSaveReqDto.setTitle("테스트타이틀1");
-        boardSaveReqDto.setContent("테스트컨텐트");
-        User user = User.builder().id(1L).username("ssar").build();
-        boardSaveReqDto.setSessionUser(new SessionUser(user));
-        boardService.save(boardSaveReqDto);        
-
-        //given
+        // given
         Long id = 1L;
-        
-        //when
-        ResultActions resultActions = mvc.perform(get("/board/" + id).accept(MediaType.APPLICATION_JSON_VALUE));
 
-        //then
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/board/" + id).accept(APPLICATION_JSON));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        // BoardDetailRespDto boardDetailRespDto = om.readValue(mvcResult.getResponse().getContentAsString(),
+        //         BoardDetailRespDto.class);
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("스프링1강"));
     }
 
     @Test
-    public void save_test() throws JsonProcessingException {
-        
-        UserJoinReqDto joinReqDto = new UserJoinReqDto();
-        joinReqDto.setUsername("ssar");
-        joinReqDto.setPassword("1234");
-        userService.save(joinReqDto);
-
-        session = new MockHttpSession();
-        request = new MockHttpServletRequest();
-
-        User user = User.builder().id(1L).username("ssar").build();
-        SessionUser sessionUser = new SessionUser(user);
-
-        session.setAttribute("principal", sessionUser);
-
-        request.setSession(session);
-
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-
-    
-        //given
+    public void save_test() throws Exception {
+        // given
         BoardSaveReqDto boardSaveReqDto = new BoardSaveReqDto();
         boardSaveReqDto.setTitle("스프링1강");
         boardSaveReqDto.setContent("트랜잭션관리");
 
         String body = om.writeValueAsString(boardSaveReqDto);
-        System.out.println("디버그 : " + body);
 
-        //when
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.post("/board").content(body)
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
+                        .session(session));
 
-        
-        //then
-
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(2L));
     }
 }

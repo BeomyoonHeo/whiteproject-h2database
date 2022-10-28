@@ -26,7 +26,6 @@ import site.metacoding.white.dto.BoardResponseDto.BoardUpdateRespDto;
 @RequiredArgsConstructor
 @Service
 @ToString
-@Slf4j
 public class BoardService {
 
     private final BoardRepository boardRepository;

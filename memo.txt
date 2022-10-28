@@ -1,7 +1,7 @@
 서버 킬 때 f5 (with out debuger - ctrl + f5)
 디버그
  - 로그 작성(매우 중요) - sysout 많이 찍어보기
- - 
+ - Sl4j 사용해서 디버그로그 찍어보기
 
 yml파일은 json 경량화 파일이다. - application.properties보다 경량화 되어 있음(경량화 되어있고, 가독성도 좋다.)
 spring은 gradle에 있는 version을 자동으로 맞춰준다. (version 입력 생략 시)
@@ -28,3 +28,43 @@ SHA-256 - 단방향 암호화 알고리즘으로써 비밀번호를 암호화하
 
 공통로직 - 어느메서드에서나 똑같이 사용되는 로직
 
+개발서버와 서비스서버는 서로 다른 os환경이기 때문에 시스템콜, 디렉토리구조 등 서로다른 os환경을 적응시키기 위해서 테스트서버를 사용해서 
+서비스를 준비해야 한다.
+
+profile - 어떤 yml을 가지고 서버를 실행할지 결정할 수 있음
+
+h2 데이터베이스는 auto-increment 전략을 사용하지 않음 yml파일을 수정해야 auto-increment를 사용할 수 있다. MODE=MYSQL
+테스트에서 중요한것은 테스트 격리이다. - 테스트 후에 다시 테스트를 진행할 때 같은 값으로 테스트 진행시에 테스트에 이상이 없어야 한다.
+java classpath공부해보기
+
+spring에서의 bean은 IOC에 등록되는 모든 객체를 일컫는다.
+
+JUNIT MOCK
+트랜잭션 시작
+(1) 가짜 세션 만들기
+(2) 데이터 초기화
+ - User Save
+ - Board Save
+ - Comment Save(영속화된 Board에 comment 추가)
+(3) board/1 Get요청함
+ - Repository select 한다.
+ - 영속성 컨텍스트 조회
+ - Board
+(1, 스프링1강, 트랜잭션 관리)
+(1, ssar, 1234)
+(4) 트랜잭션 종료 rollback
+(5) truncate(auto_increment)
+
+가짜환경
+영속성 컨텍스트
+ - User
+(1, ssar, 1234)
+
+ - Board
+(1, 스프링1강, 트랜잭션 관리)
+(1, ssar, 1234)
+
+ - Comment
+(1, 내용좋아요)
+(1, 스프링1강, 트랜잭션 관리)
+(1, ssar, 1234)

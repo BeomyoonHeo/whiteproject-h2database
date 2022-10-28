@@ -27,6 +27,7 @@ import site.metacoding.white.domain.CommentRepository;
 import site.metacoding.white.domain.User;
 import site.metacoding.white.domain.UserRepository;
 import site.metacoding.white.dto.BoardRequestDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardRequestDto.BoardUpdateReqDto;
 import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.util.SHA256;
 
@@ -94,8 +95,28 @@ public class BoardApicontrollerTest {
                 .user(userPS)
                 .build();
 
+
         commentRepository.save(comment);
     }
+@Test
+public void save_test() throws Exception {
+    // given
+    BoardSaveReqDto boardSaveReqDto = new BoardSaveReqDto();
+    boardSaveReqDto.setTitle("스프링1강");
+    boardSaveReqDto.setContent("트랜잭션관리");
+
+    String body = om.writeValueAsString(boardSaveReqDto);
+
+    // when
+    ResultActions resultActions = mvc
+            .perform(MockMvcRequestBuilders.post("/board").content(body)
+                    .contentType("application/json; charset=utf-8").accept("application/json; charset=utf-8")
+                    .session(session));
+
+    // then
+    MvcResult mvcResult = resultActions.andReturn();
+    System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+}
 
     @Test
     public void findById_test() throws Exception {
@@ -116,23 +137,64 @@ public class BoardApicontrollerTest {
     }
 
     @Test
-    public void save_test() throws Exception {
+    public void findAll_test() throws Exception {
         // given
-        BoardSaveReqDto boardSaveReqDto = new BoardSaveReqDto();
-        boardSaveReqDto.setTitle("스프링1강");
-        boardSaveReqDto.setContent("트랜잭션관리");
-
-        String body = om.writeValueAsString(boardSaveReqDto);
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/board").content(body)
+                .perform(MockMvcRequestBuilders.get("/board").accept(APPLICATION_JSON));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        // BoardDetailRespDto boardDetailRespDto = om.readValue(mvcResult.getResponse().getContentAsString(),
+        //         BoardDetailRespDto.class);
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.[0].title").value("스프링1강"));
+    }
+
+    @Test
+    public void update_test() throws Exception {
+        // given
+        Long id = 1L;
+        BoardUpdateReqDto boardUpdateReqDto = new BoardUpdateReqDto();
+        boardUpdateReqDto.setId(id);
+        boardUpdateReqDto.setTitle("스프링2강");
+        boardUpdateReqDto.setContent("JUNIT공부");
+
+        String body = om.writeValueAsString(boardUpdateReqDto);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.put("/board/" + id).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
                         .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(2L));
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("스프링2강"));
     }
+    
+    @Test
+    //@Commit
+    public void deleteById_test() throws Exception {
+        // given
+        Long id = 1L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.delete("/board/"+ id)
+                        .accept(APPLICATION_JSON)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        //resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("스프링1강"));
+    }
+
+
+
 }

@@ -34,7 +34,7 @@ public class BoardService {
     public BoardSaveRespDto save(BoardSaveReqDto boardSaveReqDto) {
 
         Board boardPS = boardRepository.save(boardSaveReqDto.toEntity());
-    
+
         BoardSaveRespDto boardSaveRespDto = new BoardSaveRespDto(boardPS);
 
         return boardSaveRespDto;

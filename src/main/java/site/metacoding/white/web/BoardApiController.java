@@ -70,6 +70,7 @@ public class BoardApiController {
         }
         boardSaveReqDto.setSessionUser(principal);
         // insert into board(title, content, user_id), value(?, ?, ?)
+        
         BoardSaveRespDto boardSaveRespDto = boardService.save(boardSaveReqDto); // 서비스에는 단 하나의 객체만 전달한다.
 
         return new ResponseDto<>(1, "성공", boardSaveRespDto);

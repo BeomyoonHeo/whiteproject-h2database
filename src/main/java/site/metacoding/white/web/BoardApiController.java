@@ -37,23 +37,17 @@ public class BoardApiController {
         return new ResponseDto<>(1, "ok", boardDetailRespDto);
     }
 
-    @PutMapping("/board/{id}")
+    @PutMapping("/s/board/{id}")
     public ResponseDto<?> update(@PathVariable Long id, @RequestBody BoardUpdateReqDto boardUpdateReqDto) {
         SessionUser principal = (SessionUser) session.getAttribute("principal");
-        if (principal == null) {
-            throw new RuntimeException("로그인을 진행해주세요");
-        }
         boardUpdateReqDto.setId(id);
         return new ResponseDto<>(1, "code", boardService.update(boardUpdateReqDto));
     }
 
-    @DeleteMapping("/board/{id}")
+    @DeleteMapping("/s/board/{id}")
     public ResponseDto<?> delete(@PathVariable Long id) {
         SessionUser principal = (SessionUser) session.getAttribute("principal");
-        if (principal == null) {
-            throw new RuntimeException("로그인을 진행해주세요");
-        }
-        boardService.deleteById(id);
+        boardService.deleteById(id, principal.getId());
         return new ResponseDto<>(1, "ok", null);
     }
 
@@ -62,7 +56,7 @@ public class BoardApiController {
         return new ResponseDto<>(1, "ok",  boardService.findAll());
     }
 
-    @PostMapping("/board")
+    @PostMapping("/s/board")
     public ResponseDto<?> save(@RequestBody BoardSaveReqDto boardSaveReqDto) {
         SessionUser principal = (SessionUser) session.getAttribute("principal");
         if (principal == null) {

@@ -27,7 +27,7 @@ public class UserApiController {
     private final HttpSession session;
 
     //회원 정보 수정
-    @PutMapping("/user/update")
+    @PutMapping("/s/user/update")
     public ResponseDto<?> userUpdate(@RequestBody UserUpdateReqDto userUpdateReqDto) {
         SessionUser principal = (SessionUser) session.getAttribute("principal");
         userUpdateReqDto.setSessionUser(principal);
@@ -36,7 +36,7 @@ public class UserApiController {
     }
 
     //회원 정보 미리보기
-    @GetMapping("/user/{id}")
+    @GetMapping("/s/user/{id}")
     public ResponseDto<?> userDetail(@PathVariable Long id) {
         return new ResponseDto<>(1, "ok", userService.userDetail(id));
     }

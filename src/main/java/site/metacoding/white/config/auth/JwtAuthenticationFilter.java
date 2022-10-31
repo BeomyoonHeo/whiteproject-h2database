@@ -29,7 +29,7 @@ import site.metacoding.white.util.SHA256;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter implements Filter {
+public class JwtAuthenticationFilter implements Filter { // 토큰 생성필터
 
     private final UserRepository userRepository; // DI (FilterConfig 주입받음)
 

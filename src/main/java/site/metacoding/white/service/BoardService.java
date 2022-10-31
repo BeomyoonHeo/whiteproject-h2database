@@ -22,7 +22,8 @@ import site.metacoding.white.dto.BoardResponseDto.BoardUpdateRespDto;
 
 // 트랜잭션 관리
 // DTO 변환해서 컨트롤러에게 돌려줘야함
-
+// 권한은 service에서 체크해주기
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @ToString
@@ -69,10 +70,14 @@ public class BoardService {
     } // 트랜잭션 종료시 -> 더티체킹을 함
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id, Long userId) { // 권한관련된 메서드는 2번째파라미터로 권한값을 받는다.
         Optional<Board> boardOP = boardRepository.findById(id);
         if (boardOP.isEmpty()) {
             throw new RuntimeException("해당 번호" + id + "번 으로 삭제를 할 수 없습니다.");
+        }
+        Board boardPS = boardOP.get();
+        if (boardPS.getUser().getId() != userId) {
+            throw new RuntimeException("해당 게시글을 삭제할 권한이 없습니다.");
         }
         boardRepository.deleteById(id);
     }

@@ -49,11 +49,11 @@ public class UserApiController {
         return new ResponseDto<>(1, "ok", joinRespDto);
     }
 
-    //로그인
-    @PostMapping("/login")
-    public ResponseDto<?> userLogin(@RequestBody UserLoginReqDto loginReqDto) {
-        SessionUser principal = userService.login(loginReqDto);
-        session.setAttribute("principal", principal);
-        return new ResponseDto<>(1, "ok", principal);
-    }
+    // //로그인
+    // @PostMapping("/login")
+    // public ResponseDto<?> userLogin(@RequestBody UserLoginReqDto loginReqDto) {
+    //     SessionUser principal = userService.login(loginReqDto);
+    //     session.setAttribute("principal", principal);
+    //     return new ResponseDto<>(1, "ok", principal);
+    // }
 }

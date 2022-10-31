@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.implementation.LoadedTypeInitializer.ForStaticField;
 import site.metacoding.white.domain.User;
 import site.metacoding.white.domain.UserJpaRepository;
 import site.metacoding.white.dto.ResponseDto;

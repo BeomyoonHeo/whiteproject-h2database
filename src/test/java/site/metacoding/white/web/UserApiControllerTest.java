@@ -88,7 +88,7 @@ public class UserApiControllerTest {
         loginReqDto.setUsername("very");
         loginReqDto.setPassword("1234");
         String body = om.writeValueAsString(loginReqDto);
-        System.out.println("디버그: 음 ~ 로깅 맛있다 ~~ 마트......다녀오셨나봐요 ^^" + body);
+        System.out.println("디버그: " + body);
 
         //when
         HttpEntity<String> request = new HttpEntity<>(body, headers);

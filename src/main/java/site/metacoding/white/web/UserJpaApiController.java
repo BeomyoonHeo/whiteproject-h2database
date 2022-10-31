@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.implementation.LoadedTypeInitializer.ForStaticField;
 import site.metacoding.white.domain.User;
 import site.metacoding.white.domain.UserJpaRepository;
 import site.metacoding.white.dto.ResponseDto;
@@ -56,7 +57,8 @@ public class UserJpaApiController {
     public ResponseDto<?> findAll(Integer page) {
         PageRequest pr = PageRequest.of(page, 2);
         Page<User> userList = userJpaRepository.findAll(pr);
-    
+
         return new ResponseDto<>(1, "성공", userList);
     }
+        
 }

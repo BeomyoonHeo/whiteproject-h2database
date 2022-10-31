@@ -3,7 +3,6 @@ package site.metacoding.white.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +35,7 @@ public class Board {
 
     // 조회를 위해서만 필요함
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY) // mappedBy옵션을 사용해서 테이블 생성을 막는다. - Lazy 전략을 사용
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder

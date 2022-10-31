@@ -1,5 +1,13 @@
 package site.metacoding.white.web;
 
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +23,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -109,7 +115,7 @@ public void save_test() throws Exception {
 
     // when
     ResultActions resultActions = mvc
-            .perform(MockMvcRequestBuilders.post("/board").content(body)
+            .perform(post("/board").content(body)
                     .contentType("application/json; charset=utf-8").accept("application/json; charset=utf-8")
                     .session(session));
 
@@ -125,15 +131,15 @@ public void save_test() throws Exception {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/board/" + id).accept(APPLICATION_JSON));
+                .perform(get("/board/" + id).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         // BoardDetailRespDto boardDetailRespDto = om.readValue(mvcResult.getResponse().getContentAsString(),
         //         BoardDetailRespDto.class);
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("스프링1강"));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.data.title").value("스프링1강"));
     }
 
     @Test
@@ -142,16 +148,16 @@ public void save_test() throws Exception {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/board").accept(APPLICATION_JSON));
+                .perform(get("/board").accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         // BoardDetailRespDto boardDetailRespDto = om.readValue(mvcResult.getResponse().getContentAsString(),
         //         BoardDetailRespDto.class);
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.[0].title").value("스프링1강"));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.data.[0].title").value("스프링1강"));
     }
 
     @Test
@@ -167,14 +173,14 @@ public void save_test() throws Exception {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.put("/board/" + id).content(body)
+                .perform(put("/board/" + id).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
                         .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("스프링2강"));
+        resultActions.andExpect(jsonPath("$.data.title").value("스프링2강"));
     }
     
     @Test
@@ -185,7 +191,7 @@ public void save_test() throws Exception {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.delete("/board/"+ id)
+                .perform(delete("/board/"+ id)
                         .accept(APPLICATION_JSON)
                         .session(session));
 

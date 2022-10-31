@@ -30,7 +30,6 @@ public class Comment {
 
     //Board 어디에 썻는지
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @Builder

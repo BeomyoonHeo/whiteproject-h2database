@@ -45,10 +45,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public SessionUser login(UserLoginReqDto loginReqDto) {
+        
         String encPassword = sha256.encrypt(loginReqDto.getPassword());
-        User userPS = userRepository.findByUsername(loginReqDto.getUsername());
-        if (userPS.getPassword().equals(encPassword)) {
-            return new SessionUser(userPS);
+        Optional<User> userOP = userRepository.findByUsername(loginReqDto.getUsername());
+
+        if (userOP.isEmpty()  || userOP.get().getPassword().equals(encPassword)) {
+            return new SessionUser(userOP.get());
         } else {
             throw new RuntimeException("아이디 혹은 패스워드가 잘못 입력되었습니다.");
         }

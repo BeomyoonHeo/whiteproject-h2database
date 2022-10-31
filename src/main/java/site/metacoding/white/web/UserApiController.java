@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.white.dto.ResponseDto;
 import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.dto.UserRequestDto.UserJoinReqDto;
-import site.metacoding.white.dto.UserRequestDto.UserLoginReqDto;
 import site.metacoding.white.dto.UserRequestDto.UserUpdateReqDto;
 import site.metacoding.white.dto.UserResponseDto.UserJoinRespDto;
 import site.metacoding.white.dto.UserResponseDto.UserUpdateRespDto;

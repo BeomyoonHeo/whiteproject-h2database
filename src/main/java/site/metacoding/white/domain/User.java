@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity //Value Object
 @NoArgsConstructor
-@Table(name = "users") // truncate.sql의 테이블은 user를 사용할 수 없기때문에 users로 설정을 진행하였다.
+//@Table(name = "users") // truncate.sql의 테이블은 user를 사용할 수 없기때문에 users로 설정을 진행하였다.
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
